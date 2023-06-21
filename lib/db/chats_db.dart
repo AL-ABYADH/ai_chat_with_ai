@@ -75,12 +75,17 @@ class ChatsDb {
     return result.map((json) => Chat.fromJson(json)).toList();
   }
 
-  Future<int> deleteChat(int chatId) async {
+  Future<void> deleteChat(int chatId) async {
     final db = await instance.database;
 
-    return await db.delete(
+    await db.delete(
       chatsTable,
       where: '${ChatFields.chatId} = ?',
+      whereArgs: [chatId],
+    );
+    await db.delete(
+      messagesTable,
+      where: '${MessageFields.chatId} = ?',
       whereArgs: [chatId],
     );
   }

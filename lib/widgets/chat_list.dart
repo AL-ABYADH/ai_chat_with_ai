@@ -3,9 +3,11 @@ import 'package:provider/provider.dart';
 
 import '../providers/chat_provider.dart';
 import './message_bubble.dart';
+import '../widgets/Typing.dart';
 
 class ChatList extends StatefulWidget {
-  const ChatList({super.key});
+  final bool isChatting;
+  const ChatList({required this.isChatting, super.key});
 
   @override
   State<ChatList> createState() => _ChatListState();
@@ -32,13 +34,27 @@ class _ChatListState extends State<ChatList> {
       );
     });
 
-    return ListView.builder(
-        controller: _controller,
-        itemCount: messages.length,
-        itemBuilder: (ctx, index) {
-          return MessageBubble(
-            message: messages[index],
-          );
-        });
+    return Column(
+      children: [
+        Expanded(
+          child: ListView.builder(
+              controller: _controller,
+              itemCount: messages.length,
+              itemBuilder: (ctx, index) {
+                return MessageBubble(
+                  message: messages[index],
+                );
+              }),
+        ),
+        if (widget.isChatting && messages.isNotEmpty)
+          SizedBox(
+            height: 40,
+            child: Typing(
+                direction: messages[messages.length - 1].chatPartner == 'bot_1'
+                    ? 'left'
+                    : 'right'),
+          )
+      ],
+    );
   }
 }

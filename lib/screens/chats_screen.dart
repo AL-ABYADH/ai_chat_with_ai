@@ -49,7 +49,11 @@ class _ChatsScreenState extends State<ChatsScreen> {
     }
 
     return Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          foregroundColor: Theme.of(context).colorScheme.secondary,
+          backgroundColor: Theme.of(context).primaryColor,
+          title: const Text('AI Generative Chat'),
+        ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: FloatingActionButton(
           onPressed: () => _startChatOptions(context),
@@ -60,8 +64,10 @@ class _ChatsScreenState extends State<ChatsScreen> {
           ),
         ),
         body: _isLoading
-            ? const Center(
-                child: CircularProgressIndicator(),
+            ? Center(
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).primaryColor,
+                ),
               )
             : ChatsList(chats: chats, refreshMethod: refreshChats));
   }

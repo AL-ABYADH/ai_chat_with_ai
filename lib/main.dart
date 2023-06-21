@@ -30,7 +30,32 @@ class _MyAppState extends State<MyApp> {
     return ChangeNotifierProvider.value(
       value: ChatProvider(),
       builder: (context, child) => MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Bot to Bot',
+        theme: ThemeData(
+          fontFamily: 'Quicksand',
+          primaryColor: const Color.fromARGB(255, 108, 103, 183),
+          textTheme: const TextTheme(
+            titleLarge: TextStyle(
+              fontFamily: 'OpenSans',
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+          ),
+          appBarTheme: const AppBarTheme(
+            titleTextStyle: TextStyle(
+              fontFamily: 'OpenSans',
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          colorScheme: ColorScheme.fromSwatch(
+            brightness: Brightness.dark,
+          ).copyWith(
+            secondary: Colors.black,
+            onSecondary: Colors.white,
+          ),
+        ),
         home: const ChatsScreen(),
         routes: {
           ChatScreen.routeName: (ctx) => const ChatScreen(),

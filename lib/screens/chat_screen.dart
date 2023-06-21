@@ -37,11 +37,13 @@ class _ChatScreenState extends State<ChatScreen> {
 
     final mediaQuery = MediaQuery.of(context);
     final appBar = AppBar(
+      foregroundColor: Theme.of(context).colorScheme.onSecondary,
+      backgroundColor: Theme.of(context).primaryColor,
       title: Text(chatData['topic']),
     );
 
-    void showLoadingDialog(String message) {
-      showDialog(
+    Future<void> showLoadingDialog(String message) async {
+      await showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
@@ -50,7 +52,9 @@ class _ChatScreenState extends State<ChatScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(message),
-                const CircularProgressIndicator(),
+                CircularProgressIndicator(
+                  color: Theme.of(context).primaryColor,
+                ),
               ],
             ),
           );
@@ -71,19 +75,19 @@ class _ChatScreenState extends State<ChatScreen> {
       });
       Navigator.of(context).pop();
       if (_goBack) {
-        Provider.of<ChatProvider>(context, listen: false).clear();
+        // Go back to the chats screen
         Navigator.of(context).pop();
+        // Clear the chat screen
+        Provider.of<ChatProvider>(context, listen: false).clear();
       }
     }
 
-    void pauseChat() {
+    void pauseChat() async {
       Provider.of<ChatProvider>(context, listen: false).stop();
-      showLoadingDialog('Pausing chat...');
+      await showLoadingDialog('Pausing chat...');
     }
 
     Future<void> saveChat() async {
-      Navigator.of(context).pop();
-
       final List<Message> messagesWithChatId;
 
       if (_newChat) {
@@ -112,6 +116,8 @@ class _ChatScreenState extends State<ChatScreen> {
         pauseChat();
       } else {
         Navigator.of(context).pop();
+        // Clear the chat screen
+        Provider.of<ChatProvider>(context, listen: false).clear();
       }
 
       // Refresh the chats list
@@ -124,7 +130,6 @@ class _ChatScreenState extends State<ChatScreen> {
         pauseChat();
       } else {
         Navigator.of(context).pop();
-
         // Clear the chat screen
         Provider.of<ChatProvider>(context, listen: false).clear();
       }
@@ -137,9 +142,11 @@ class _ChatScreenState extends State<ChatScreen> {
 
     return WillPopScope(
       onWillPop: () async {
+        bool dialog = false;
         if (Provider.of<ChatProvider>(context, listen: false)
             .newMessages
             .isNotEmpty) {
+          dialog = true;
           await showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -147,7 +154,10 @@ class _ChatScreenState extends State<ChatScreen> {
                 content: const Text('Save chat or discard it?'),
                 actions: [
                   TextButton(
-                    child: const Text('Cancel'),
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                    ),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
@@ -157,11 +167,20 @@ class _ChatScreenState extends State<ChatScreen> {
                       Navigator.of(context).pop();
                       discardChat();
                     },
-                    child: const Text('Discard'),
+                    child: Text(
+                      'Discard',
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                    ),
                   ),
                   TextButton(
-                    onPressed: saveChat,
-                    child: const Text('Save'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      saveChat();
+                    },
+                    child: Text(
+                      'Save',
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                    ),
                   ),
                 ],
               );
@@ -170,6 +189,9 @@ class _ChatScreenState extends State<ChatScreen> {
         } else {
           discardChat();
         }
+        if (!dialog && !_isChatting) {
+          Provider.of<ChatProvider>(context, listen: false).clear();
+        }
 
         return false;
       },
@@ -177,14 +199,45 @@ class _ChatScreenState extends State<ChatScreen> {
         appBar: appBar,
         body: Column(
           children: [
-            const Expanded(
-              child: ChatList(),
+            Expanded(
+              child: ChatList(isChatting: _isChatting),
             ),
-            _isChatting
-                ? ElevatedButton(
-                    onPressed: pauseChat, child: const Text('Pause Chat'))
-                : ElevatedButton(
-                    onPressed: startChat, child: const Text('Continue Chat')),
+            Container(
+              padding: const EdgeInsets.all(15),
+              child: _isChatting
+                  ? ElevatedButton(
+                      onPressed: pauseChat,
+                      style: ButtonStyle(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        )),
+                        backgroundColor: MaterialStateProperty.all(
+                            Theme.of(context).primaryColor),
+                        fixedSize: MaterialStateProperty.all(
+                            Size(mediaQuery.size.width, 60)),
+                      ),
+                      child: Text('Pause Chat',
+                          style: Theme.of(context).textTheme.titleLarge),
+                    )
+                  : ElevatedButton(
+                      onPressed: startChat,
+                      style: ButtonStyle(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        )),
+                        backgroundColor: MaterialStateProperty.all(
+                            Theme.of(context).primaryColor),
+                        fixedSize: MaterialStateProperty.all(
+                            Size(mediaQuery.size.width, 60)),
+                      ),
+                      child: Text('Continue Chat',
+                          style: Theme.of(context).textTheme.titleLarge),
+                    ),
+            ),
             const SizedBox(
               width: 10,
             ),

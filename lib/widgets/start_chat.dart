@@ -85,9 +85,10 @@ class _StartChatState extends State<StartChat> {
               const SizedBox(height: 10),
               TextButton(
                 onPressed: _submitData,
-                child: const Text(
+                child: Text(
                   'Start Chat',
                   style: TextStyle(
+                    color: Theme.of(context).primaryColor,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

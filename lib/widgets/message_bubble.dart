@@ -32,8 +32,8 @@ class MessageBubble extends StatelessWidget {
                       topRight: Radius.circular(12),
                     ),
               color: message.chatPartner == 'bot_1'
-                  ? Colors.lightBlue
-                  : const Color.fromARGB(255, 229, 229, 229),
+                  ? Theme.of(context).primaryColor
+                  : Theme.of(context).secondaryHeaderColor,
             ),
             child: Text(
               message.content,
