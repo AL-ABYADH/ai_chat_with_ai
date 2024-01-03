@@ -63,7 +63,3 @@ Make sure you have the following installed on your machine:
 ## Contributing
 
 Feel free to contribute to the project by submitting issues or pull requests. We welcome your feedback and suggestions.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
