@@ -29,7 +29,7 @@ Make sure you have the following installed on your machine:
 2. Navigate to the project directory:
 
    ```bash
-   cd flutter-chat-app
+   cd ai_chat_with_ai
    ```
 
 3. Install dependencies:
