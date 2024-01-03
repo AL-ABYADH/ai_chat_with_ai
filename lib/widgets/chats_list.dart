@@ -15,7 +15,6 @@ class ChatsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
     return chats.isEmpty
         ? Center(
             child: LayoutBuilder(
@@ -58,11 +57,18 @@ class ChatsList extends StatelessWidget {
               color: Theme.of(context).primaryColor,
               child: ListView(
                 children: chats
-                    .map((chat) => ChatItem(
-                          chatId: chat.chatId!,
-                          topic: chat.topic,
-                          firstMessage: chat.firstMessage,
-                          refreshMethod: refreshMethod,
+                    .map((chat) => Column(
+                          children: [
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            ChatItem(
+                              chatId: chat.chatId!,
+                              topic: chat.topic,
+                              firstMessage: chat.firstMessage,
+                              refreshMethod: refreshMethod,
+                            ),
+                          ],
                         ))
                     .toList(),
               ),

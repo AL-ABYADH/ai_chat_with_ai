@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 import 'package:retry/retry.dart';
@@ -27,14 +30,14 @@ class ChatProvider with ChangeNotifier {
     final OpenAI openAI = MyApp.openAI;
 
     String bot1Message =
-        '''You're in a chatting app, and I'll be chatting with you. The topic of the chat is "$topic". Keep it very casual and informal. Respond to the current message with only one short message.
+        '''Continue the following chat. The topic of the chat is "$topic". Keep it very casual and informal. Respond to the current message with only one short message. If the chat has not got into the topic, make sure you mention the topic. Don't agree the whole time. Make sure you keep the conversation exciting.
       ${_getChatHistory('bot_1')} Me: $_currentMessage <-- This is the current message
       You:
     ''';
 
     String bot2Message = _sendTo == SendTo.bot2
         ? ''
-        : '''You are in a chatting app, and I'll be chatting with you. The topic of the chat is "$topic". Keep it casual and very informal. Respond to the current message with only one short message.
+        : '''Continue the following chat. The topic of the chat is "$topic". Keep it casual and very informal. Respond to the current message with only one short message. If the chat has not got into the topic, make sure you mention the topic. Don't agree the whole time. Make sure you keep the conversation exciting.
       ${_getChatHistory('bot_2')} Me: $_currentMessage <-- This is the current message
       You:
     ''';
@@ -51,32 +54,38 @@ class ChatProvider with ChangeNotifier {
     }
 
     notifyListeners();
+
     if (_sendTo == SendTo.bot2) {
       bot2Message = await _sendToBot2(bot1Message, bot2Message, openAI, topic);
+    } else {
+      await _sendToBot1(bot2Message, openAI, topic);
     }
-
-    if (_stop) return;
-    await _sendToBot1(bot2Message, openAI, topic);
 
     if (_stop) return;
     await start(firstMessage: _currentMessage, topic: topic);
   }
 
   Future<String> _sendToBot2(bot1Message, bot2Message, openAI, topic) async {
+    print('\n&&&&&&&&&&&&&&&&&called send to bot 2&&&&&&&&&&&&&&&&&&&\n');
     try {
-      final request = ChatCompleteText(
-        messages: [
-          Map.of({"role": "user", "content": bot1Message})
-        ],
-        maxToken: 200,
-        model: ChatModel.gptTurbo0301,
-      );
+      final request = ChatCompleteText(messages: [
+        Messages(role: Role.user, content: bot1Message),
+      ], maxToken: 200, model: GptTurboChatModel());
 
       const r = RetryOptions(maxAttempts: 100);
 
-      final response = await r
-          .retry(() => openAI.onChatCompletion(request: request))
-          .timeout(const Duration(seconds: 50));
+      print('\n===============started sending to bot 2==================\n');
+      final response = await r.retry(
+        () {
+          print(
+              '\n+++++++++++++++++++++tried sending to bot 2+++++++++++++++++++++++\n');
+          return openAI
+              .onChatCompletion(request: request)
+              .timeout(const Duration(seconds: 30));
+        },
+        retryIf: (e) => e is SocketException || e is TimeoutException,
+      );
+      print('\n-----------------finished sending to bot 2----------------\n');
 
       if (_stop) return bot2Message;
 
@@ -89,7 +98,7 @@ class ChatProvider with ChangeNotifier {
       _sendTo = SendTo.bot1;
 
       bot2Message =
-          '''You are in a chatting app, and I'll be chatting with you. The topic of the chat is "$topic". Keep your messages short, casual, and very informal. Respond to the current message with only one short message.
+          '''Continue the following chat. The topic of the chat is "$topic". Keep your messages short, casual, and very informal. Respond to the current message with only one short message. If the chat has not got into the topic, make sure you mention the topic. Don't agree the whole time. Make sure you keep the conversation exciting.
       ${_getChatHistory('bot_2')} Me: $_currentMessage <-- This is the current message
       You:
     ''';
@@ -102,10 +111,9 @@ class ChatProvider with ChangeNotifier {
 
       notifyListeners();
     } catch (err) {
-      print(err);
-
-      if (!_stop) {
-        start(topic: topic);
+      print("error: $err");
+      if (err.toString().contains('status code :429')) {
+        await Future.delayed(const Duration(seconds: 20));
       }
     }
 
@@ -113,20 +121,27 @@ class ChatProvider with ChangeNotifier {
   }
 
   Future<void> _sendToBot1(bot2Message, openAI, topic) async {
+    print('\n&&&&&&&&&&&&&&&&&called send to bot 1&&&&&&&&&&&&&&&&&&&\n');
     try {
-      final request = ChatCompleteText(
-        messages: [
-          Map.of({"role": "user", "content": bot2Message})
-        ],
-        maxToken: 200,
-        model: ChatModel.gptTurbo0301,
-      );
+      final request = ChatCompleteText(messages: [
+        Messages(role: Role.user, content: bot2Message),
+      ], maxToken: 200, model: GptTurboChatModel());
 
       const r = RetryOptions(maxAttempts: 100);
 
-      final response = await r
-          .retry(() => openAI.onChatCompletion(request: request))
-          .timeout(const Duration(seconds: 50));
+      print('\n================started sending to bot 1=================\n');
+      final response = await r.retry(
+        () {
+          print(
+              '\n+++++++++++++++++++++tried sending to bot 1+++++++++++++++++++++++\n');
+          return openAI
+              .onChatCompletion(request: request)
+              .timeout(const Duration(seconds: 30));
+        },
+        retryIf: (e) => e is SocketException || e is TimeoutException,
+      );
+      print(
+          '\n--------------------finished sending to bot 1---------------------\n');
 
       if (_stop) return;
 
@@ -138,10 +153,9 @@ class ChatProvider with ChangeNotifier {
 
       _sendTo = SendTo.bot2;
     } catch (err) {
-      print(err);
-
-      if (!_stop) {
-        start(topic: topic);
+      print("error: $err");
+      if (err.toString().contains('status code :429')) {
+        await Future.delayed(const Duration(seconds: 20));
       }
     }
 

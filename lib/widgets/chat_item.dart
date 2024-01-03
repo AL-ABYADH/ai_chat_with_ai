@@ -36,69 +36,65 @@ class ChatItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Dismissible(
-      onDismissed: (direction) {
-        ChatsDb.instance.deleteChat(chatId);
-        refreshMethod();
-      },
-      key: ValueKey(chatId),
-      direction: DismissDirection.endToStart,
-      confirmDismiss: (direction) {
-        return showDialog(
-          context: context,
-          builder: (ctx) => AlertDialog(
-            title: Text(
-              'Confirm Deletion',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            content: const Text('Do you want to delete this chat?'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(ctx).pop(false);
-                },
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(color: Theme.of(context).primaryColor),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(ctx).pop(true);
-                },
-                child: Text(
-                  'Delete',
-                  style: TextStyle(color: Theme.of(context).primaryColor),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-      background: Container(
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
-          color: Theme.of(context).colorScheme.error,
-        ),
-        alignment: Alignment.centerRight,
-        padding: const EdgeInsets.only(
-          right: 20,
-        ),
-        margin: const EdgeInsets.all(10),
-        child: const Icon(
-          Icons.delete,
-          color: Colors.white,
-          size: 40,
-        ),
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
+        color: Theme.of(context).secondaryHeaderColor,
       ),
-      child: GestureDetector(
-        onTap: () => enterChat(context),
-        child: Container(
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      child: Dismissible(
+        onDismissed: (direction) {
+          ChatsDb.instance.deleteChat(chatId);
+          refreshMethod();
+        },
+        key: ValueKey(chatId),
+        direction: DismissDirection.endToStart,
+        confirmDismiss: (direction) {
+          return showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: Text(
+                'Confirm Deletion',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              content: const Text('Do you want to delete this chat?'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop(false);
+                  },
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(color: Theme.of(context).primaryColor),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop(true);
+                  },
+                  child: Text(
+                    'Delete',
+                    style: TextStyle(color: Theme.of(context).primaryColor),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+        background: Container(
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(20)),
-            color: Theme.of(context).secondaryHeaderColor,
+            color: Theme.of(context).colorScheme.error,
           ),
-          margin: const EdgeInsets.all(10),
+          alignment: Alignment.centerRight,
+          child: const Icon(
+            Icons.delete,
+            color: Colors.white,
+            size: 40,
+          ),
+        ),
+        child: GestureDetector(
+          onTap: () => enterChat(context),
           child: ListTile(
             title: Text(
               topic,
