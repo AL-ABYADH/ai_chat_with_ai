@@ -1,6 +1,6 @@
 # Flutter Chat App with OpenAI Integration
 
-Welcome to the Flutter Chat App, an open-source mobile application that utilizes OpenAI's GPT for generating chat responses. This app allows users to engage in conversations with the AI, with the ability to save and continue conversations.
+Welcome to the AI Chat With AI, an open-source mobile application that utilizes OpenAI's GPT for generating chat responses. This app allows users to watch AI chatting with AI on a normal chat screen about a topic they select.
 
 ## Getting Started
 
@@ -35,7 +35,7 @@ Make sure you have the following installed on your machine:
 
 ### Configuration
 
-1. Create a new file named `.env` in the `lib` directory next to the main file (`main.dart`).
+1. Create a new file named `.env` in the `lib` directory.
 
 2. Open the `.env` file and add the following line, replacing `your_openai_api_key` with your actual OpenAI API key:
 
@@ -59,14 +59,6 @@ Make sure you have the following installed on your machine:
    ```bash
    flutter run
    ```
-
-### Usage
-
-- On the home screen, view the list of previous chats.
-- Press the "Add New Chat" button to start a new conversation.
-- Enter the topic and the first message to initiate the chat.
-- Press "Start" to begin the conversation with the AI.
-- Use the "Pause," "Back," and "Save/Discard" buttons for additional functionality.
 
 ## Contributing
 
