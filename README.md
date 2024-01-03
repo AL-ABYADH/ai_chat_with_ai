@@ -5,7 +5,7 @@ Welcome to the AI Chat With AI, an open-source mobile application that utilizes 
 ## Try it out now!
 Contact me to get an APK version with an active OpenAI API key to try out the app:
 - Email: yahyaalabyadh71@gmail.com
-- Whatsapp: https://api.whatsapp.com/send?phone=967771307445
+- WhatsApp: https://api.whatsapp.com/send?phone=967771307445
 
 ## Getting Started
 
