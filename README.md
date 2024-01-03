@@ -1,6 +1,6 @@
 # Flutter Chat App with OpenAI Integration
 
-Welcome to the AI Chat With AI, an open-source mobile application that utilizes OpenAI's GPT for generating chat responses. This app allows users to watch AI chatting with AI on a normal chat screen about a topic they select.
+Welcome to the AI Chat With AI, an open-source mobile application that utilizes OpenAI's GPT for generating chats about certain topics. This app allows users to watch AI chatting with AI on a regular chat screen about a topic they select.
 
 ## Try it out now!
 Contact me to get an APK version with an active OpenAI API key to try out the app:
