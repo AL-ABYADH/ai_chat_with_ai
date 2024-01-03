@@ -2,6 +2,11 @@
 
 Welcome to the AI Chat With AI, an open-source mobile application that utilizes OpenAI's GPT for generating chat responses. This app allows users to watch AI chatting with AI on a normal chat screen about a topic they select.
 
+## Try it out now!
+Contact me to get an APK version with an active OpenAI API key to try out the app:
+email: yahyaalabyadh71@gmail.com
+Whatsapp: https://api.whatsapp.com/send?phone=967771307445
+
 ## Getting Started
 
 Follow the steps below to set up and launch the Flutter Chat App on your local machine.
@@ -36,8 +41,11 @@ Make sure you have the following installed on your machine:
 ### Configuration
 
 1. Create a new file named `.env` in the `lib` directory.
+ 
+2. Get an API key from your OpenAI account by navigating to this page: https://platform.openai.com/api-keys
+**Note:** Make sure your account has enough credit to use the API. You can check your usage on this page: https://platform.openai.com/usage
 
-2. Open the `.env` file and add the following line, replacing `your_openai_api_key` with your actual OpenAI API key:
+4. Open the `.env` file and add the following line, replacing `your_openai_api_key` with your actual OpenAI API key:
 
    ```
    API_KEY_1=your_openai_api_key
