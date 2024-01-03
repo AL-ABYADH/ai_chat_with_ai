@@ -9,7 +9,7 @@ Contact me to get an APK version with an active OpenAI API key to try out the ap
 
 ## Getting Started
 
-Follow the steps below to set up and launch the Flutter Chat App on your local machine.
+Follow the steps below to set up and launch the app on your local machine.
 
 ### Prerequisites
 
