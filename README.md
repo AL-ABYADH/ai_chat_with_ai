@@ -4,8 +4,8 @@ Welcome to the AI Chat With AI, an open-source mobile application that utilizes 
 
 ## Try it out now!
 Contact me to get an APK version with an active OpenAI API key to try out the app:
-email: yahyaalabyadh71@gmail.com
-Whatsapp: https://api.whatsapp.com/send?phone=967771307445
+- Email: yahyaalabyadh71@gmail.com
+- Whatsapp: https://api.whatsapp.com/send?phone=967771307445
 
 ## Getting Started
 
@@ -71,3 +71,5 @@ Make sure you have the following installed on your machine:
 ## Contributing
 
 Feel free to contribute to the project by submitting issues or pull requests. We welcome your feedback and suggestions.
+
+**Note:** If you're experiencing slow chat, that's because of the requests limit recently implemented by OpenAI, which is 3 RPM (Request Per Minute). This limit increases with payments to the use of the API via your account.
